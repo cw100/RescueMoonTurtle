@@ -62,6 +62,7 @@ namespace RescueMoonTurtle
             turtleTransformation =
              Matrix.CreateTranslation(new Vector3(-origin, 0.0f)) *
              Matrix.CreateScale(scale) *
+             Matrix.CreateRotationZ(angle)*
              Matrix.CreateTranslation(new Vector3(position, 0.0f));
             Matrix.CreateTranslation(new Vector3(position, 0.0f));
             

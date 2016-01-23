@@ -17,11 +17,12 @@ namespace RescueMoonTurtle
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Moon moon;
-        Player player;
+        
         Texture2D projectileTexture;
         Texture2D turtleTexture;
         List<Turtle> turtles;
-        int maxTurtles;
+        int maxTurtles,numberOfPlayers;
+         List<Player> players;
         public static List<Projectile> projectiles;
         public static int windowWidth, windowHeight;
         public Game1()
@@ -39,7 +40,9 @@ namespace RescueMoonTurtle
 
         protected override void Initialize()
         {
-            maxTurtles = 10;
+            numberOfPlayers = 4;
+            maxTurtles = 10; 
+            players = new List<Player>();
             projectiles = new List<Projectile>();
             turtles = new List<Turtle>();
             base.Initialize();
@@ -54,14 +57,11 @@ namespace RescueMoonTurtle
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             projectileTexture = LoadTexture(this.Content, "projectile");
-
+            LoadPlayers();
             turtleTexture = LoadTexture(this.Content, "turtle");
             moon = new Moon(LoadTexture(this.Content, "moon"),
                 new Vector2(windowWidth / 2, windowHeight / 2), 100);
-            player = new Player(LoadTexture(this.Content, "player"), projectileTexture, TimeSpan.FromSeconds(0.1), new Vector2(100, 100),
-                 new Vector2(windowWidth / 2, windowHeight / 2),
-                 150,
-                 PlayerIndex.One, 100);
+           
 
         }
 
@@ -72,6 +72,17 @@ namespace RescueMoonTurtle
         }
         TimeSpan previousSpawnTime;
         TimeSpan spawnTime = TimeSpan.FromSeconds(1);
+        public void LoadPlayers() 
+        { 
+            for(int i =0;i<numberOfPlayers;i++)
+            {
+               Player player = new Player(LoadTexture(this.Content, "player"), projectileTexture, TimeSpan.FromSeconds(0.1), new Vector2(100*i, 100),
+                new Vector2(windowWidth / 2, windowHeight / 2),
+                150,
+                (PlayerIndex)i, 100);
+               players.Add(player);
+            }
+        }
         public void AddTurtle(GameTime gameTime)
         {
             if (turtles.Count < maxTurtles)
@@ -80,7 +91,7 @@ namespace RescueMoonTurtle
                 {
                     Random random = new Random();
                     Vector2 turtleSpawnPos;
-                    switch (random.Next(5))
+                    switch (random.Next(1,5))
                     {
                         case 1:
                             turtleSpawnPos = new Vector2(0 - turtleTexture.Width, random.Next(windowHeight));
@@ -124,6 +135,22 @@ namespace RescueMoonTurtle
                 }
             
         }
+        public void MoonProjectileCollision()
+        {
+            for (int i = 0; i < projectiles.Count; i++)
+            {
+              
+                    if (moon.hitBox.Intersects(projectiles[i].hitBox))
+                    {
+                        if (Collision.CollidesWith(moon, projectiles[i], moon.moonTransformation, projectiles[i].projectileTransformation))
+                        {
+                            
+                            projectiles[i].active = false;
+                        }
+                    }
+                
+            }
+        }
         public void TurtleProjectileCollision()
         {
             for (int i = 0; i < projectiles.Count; i++)
@@ -134,7 +161,7 @@ namespace RescueMoonTurtle
                     {
                     if (Collision.CollidesWith(turtles[j], projectiles[i], turtles[j].turtleTransformation, projectiles[i].projectileTransformation))
                     {
-                        turtles[j].velocity += projectiles[i].velocity/10;
+                        turtles[j].velocity += projectiles[i].velocity/5;
                         
                         projectiles[i].active = false;
                     }
@@ -165,9 +192,13 @@ namespace RescueMoonTurtle
                 }
             }
             moon.Update(gameTime);
-            player.Update(gameTime);
+            foreach (Player player in players)
+            {
+                player.Update(gameTime);
+            }
             TurtleProjectileCollision();
             TurtleMoonCollision();
+            MoonProjectileCollision();
             base.Update(gameTime);
         }
 
@@ -185,7 +216,10 @@ namespace RescueMoonTurtle
                 turtle.Draw(spriteBatch);
             }
             moon.Draw(spriteBatch);
-            player.Draw(spriteBatch);
+            foreach (Player player in players)
+            {
+                player.Draw(spriteBatch);
+            }
             spriteBatch.End();
             base.Draw(gameTime);
         }

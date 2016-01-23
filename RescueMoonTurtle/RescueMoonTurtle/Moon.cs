@@ -27,11 +27,14 @@ namespace RescueMoonTurtle
             }
             if (active)
             {
+                angle += 0.01f;
                 base.Update(gameTime);
+
                 moonTransformation =
-            Matrix.CreateTranslation(new Vector3(-origin, 0.0f)) *
-            Matrix.CreateScale(scale) *
-            Matrix.CreateTranslation(new Vector3(position, 0.0f));
+           Matrix.CreateTranslation(new Vector3(-origin, 0.0f)) *
+           Matrix.CreateScale(scale) *
+           Matrix.CreateRotationZ(angle) *
+           Matrix.CreateTranslation(new Vector3(position, 0.0f));
                 Matrix.CreateTranslation(new Vector3(position, 0.0f));
             }
 
