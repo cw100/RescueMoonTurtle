@@ -6,85 +6,187 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
+
 #endregion
 
 namespace RescueMoonTurtle
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
+
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        Moon moon;
+        Player player;
+        Texture2D projectileTexture;
+        Texture2D turtleTexture;
+        List<Turtle> turtles;
+        int maxTurtles;
+        public static List<Projectile> projectiles;
+        public static int windowWidth, windowHeight;
         public Game1()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferHeight = 1050;
+
+            graphics.PreferredBackBufferWidth = 1680;
+            windowWidth = graphics.PreferredBackBufferWidth;
+            windowHeight = graphics.PreferredBackBufferHeight;
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            maxTurtles = 10;
+            projectiles = new List<Projectile>();
+            turtles = new List<Turtle>();
             base.Initialize();
         }
+        public static Texture2D LoadTexture(ContentManager theContentManager, string textureName)
+        {
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+            return theContentManager.Load<Texture2D>(textureName);
+
+        }
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            projectileTexture = LoadTexture(this.Content, "projectile");
 
-            // TODO: use this.Content to load your game content here
+            turtleTexture = LoadTexture(this.Content, "turtle");
+            moon = new Moon(LoadTexture(this.Content, "moon"),
+                new Vector2(windowWidth / 2, windowHeight / 2), 100);
+            player = new Player(LoadTexture(this.Content, "player"), projectileTexture, TimeSpan.FromSeconds(0.1), new Vector2(100, 100),
+                 new Vector2(windowWidth / 2, windowHeight / 2),
+                 150,
+                 PlayerIndex.One, 100);
+
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
+
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
-        }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        }
+        TimeSpan previousSpawnTime;
+        TimeSpan spawnTime = TimeSpan.FromSeconds(1);
+        public void AddTurtle(GameTime gameTime)
+        {
+            if (turtles.Count < maxTurtles)
+            {
+                if (gameTime.TotalGameTime - previousSpawnTime > spawnTime)
+                {
+                    Random random = new Random();
+                    Vector2 turtleSpawnPos;
+                    switch (random.Next(5))
+                    {
+                        case 1:
+                            turtleSpawnPos = new Vector2(0 - turtleTexture.Width, random.Next(windowHeight));
+                            break;
+                        case 2:
+                            turtleSpawnPos = new Vector2(windowWidth + turtleTexture.Width, random.Next(windowHeight));
+                            break;
+                        case 3:
+                            turtleSpawnPos = new Vector2(random.Next(windowWidth), 0 - turtleTexture.Height);
+                            break;
+                        case 4:
+                            turtleSpawnPos = new Vector2(random.Next(windowWidth), windowHeight + turtleTexture.Height);
+                            break;
+                        default:
+
+                            turtleSpawnPos = new Vector2(0 - turtleTexture.Width, random.Next(windowHeight));
+                            break;
+                    }
+
+                    Turtle turtle = new Turtle(turtleTexture, turtleSpawnPos, moon.position, 0.001f, 5, 5, 10);
+                    turtles.Add(turtle);
+                    previousSpawnTime = gameTime.TotalGameTime;
+                }
+            }
+        }
+  
+        
+        public void TurtleMoonCollision()
+        {
+           
+                for (int i = 0; i < turtles.Count; i++)
+                {
+                    if (turtles[i].hitBox.Intersects(moon.hitBox))
+                    {
+                        if (Collision.CollidesWith(turtles[i], moon, turtles[i].turtleTransformation, moon.moonTransformation))
+                        {
+                            turtles[i].active = false;
+                            turtles.RemoveAt(i);
+                        }
+                    }
+                }
+            
+        }
+        public void TurtleProjectileCollision()
+        {
+            for (int i = 0; i < projectiles.Count; i++)
+            {
+                for (int j = 0; j < turtles.Count; j++)
+                {
+                    if (turtles[j].hitBox.Intersects(projectiles[i].hitBox))
+                    {
+                    if (Collision.CollidesWith(turtles[j], projectiles[i], turtles[j].turtleTransformation, projectiles[i].projectileTransformation))
+                    {
+                        turtles[j].velocity += projectiles[i].velocity/10;
+                        
+                        projectiles[i].active = false;
+                    }
+                    }
+                }
+            }
+        }
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-
+            for (int i = 0; i < projectiles.Count; i++)
+            {
+                projectiles[i].Update(gameTime);
+                if (projectiles[i].active == false)
+                {
+                    projectiles.RemoveAt(i);
+                }
+            }
+            AddTurtle(gameTime);
+            for (int i = 0; i < turtles.Count; i++)
+            {
+                turtles[i].Update(gameTime);
+                if (turtles[i].active == false)
+                {
+                    turtles.RemoveAt(i);
+                }
+            }
+            moon.Update(gameTime);
+            player.Update(gameTime);
+            TurtleProjectileCollision();
+            TurtleMoonCollision();
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            foreach (Projectile projectile in projectiles)
+            {
+                projectile.Draw(spriteBatch);
+            }
+            foreach (Turtle turtle in turtles)
+            {
+                turtle.Draw(spriteBatch);
+            }
+            moon.Draw(spriteBatch);
+            player.Draw(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
