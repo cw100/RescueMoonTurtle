@@ -46,7 +46,7 @@ namespace RescueMoonTurtle
                 active = false;
             }
         }
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             prePosition = position;
             velocity = new Vector2(vectorAngle.X,vectorAngle.Y) * speed * gameTime.ElapsedGameTime.Milliseconds;
@@ -62,9 +62,9 @@ namespace RescueMoonTurtle
             Matrix.CreateTranslation(new Vector3(position, 0.0f));
             CheckInsideWindow();
         }
-       
 
-        public void Draw(SpriteBatch sb)
+
+        public override void Draw(SpriteBatch sb)
         {
             if (active)
             {

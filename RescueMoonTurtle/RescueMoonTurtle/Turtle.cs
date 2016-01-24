@@ -16,9 +16,7 @@ namespace RescueMoonTurtle
         public Vector2 gravityVector;
         public float gravity;
         public int mass;
-        public Vector2 vectorAngle;
         public int speed;
-        Random random;
         public Vector2 center;
         public Matrix turtleTransformation;
         public Turtle(Texture2D texture, Vector2 pos, Vector2 center, float gravity, int speed, int mass, int hp)
@@ -51,25 +49,22 @@ namespace RescueMoonTurtle
             gravityVector.Normalize();
             velocity += gravityVector * gravity * gameTime.ElapsedGameTime.Milliseconds;
         }
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             ApplyGravity(gameTime);
+            
             position += velocity;
+            angle = (float)Math.Atan2(center.Y - position.Y, center.X - position.X);
             hitBox.X = (int)position.X - frameWidth / 2;
             hitBox.Y = (int)position.Y - frameHeight / 2;
             CheckInsideWindow();
             base.Update(gameTime);
-            turtleTransformation =
-             Matrix.CreateTranslation(new Vector3(-origin, 0.0f)) *
-             Matrix.CreateScale(scale) *
-             Matrix.CreateRotationZ(angle)*
-             Matrix.CreateTranslation(new Vector3(position, 0.0f));
-            Matrix.CreateTranslation(new Vector3(position, 0.0f));
+            
             
         }
 
 
-        public void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb)
         {
             if (active)
             {

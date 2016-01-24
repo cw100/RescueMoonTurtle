@@ -13,36 +13,33 @@ namespace RescueMoonTurtle
 
         static public Vector2 collisionVector;
 
-        public static bool CollidesWith(Animation objectA, Animation objectB, Matrix aTransform, Matrix bTransform)
+        public static bool CollidesWith(Animation objectA, Animation objectB)
         {
-            return CollidesWith(objectA, objectB, aTransform, bTransform, true);
+            return CollidesWith(objectA, objectB, true);
         }
-        public static bool CollidesWith(Animation objectA, Animation objectB, Matrix aTransform, Matrix bTransform, Point lineorigin, Point lineend)
-        {
-            return CollidesWith(objectA, objectB, aTransform, bTransform, true);
-        }
+      
 
-        public static bool CollidesWith(Animation objectA, Animation objectB, Matrix aTransform, Matrix bTransform, bool calcPerPixel)
+        public static bool CollidesWith(Animation objectA, Animation objectB, bool calcPerPixel)
         {
 
 
             Rectangle objectARectangle = CalculateBoundingRectangle(
                      new Rectangle(0, 0, objectA.frameWidth, objectA.frameHeight),
-                     aTransform);
+                     objectA.transformation);
 
-
+            
             Rectangle objectBRectangle = CalculateBoundingRectangle(
                     new Rectangle(0, 0, objectB.frameWidth, objectB.frameHeight),
-                    bTransform);
+                    objectB.transformation);
 
 
             if (objectBRectangle.Intersects(objectARectangle))
             {
                 objectA.collisionData();
                 objectB.collisionData();
-                if (IntersectPixels(aTransform, objectA.frameWidth,
+                if (IntersectPixels(objectA.transformation, objectA.frameWidth,
                                     objectA.frameHeight, objectA.colorData,
-                                    bTransform, objectB.frameWidth,
+                                    objectB.transformation, objectB.frameWidth,
                                     objectB.frameHeight, objectB.colorData))
                 {
                     return true;

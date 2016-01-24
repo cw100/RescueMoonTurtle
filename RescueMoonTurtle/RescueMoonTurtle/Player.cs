@@ -11,19 +11,18 @@ namespace RescueMoonTurtle
     class Player : Animation
     {
         public PlayerIndex playerNumber;
-        public Vector2 velocity;
         public Vector2 center;
         public int hp;
         public float rotation=0;
         GamePadState gamePadState;
         Vector2 stickInputRight, stickInputLeft;
-        int distanceToCenter;
+        public int distanceToCenter;
         Texture2D projectileTexture;
 
         TimeSpan fireRate ;
         TimeSpan previousFireTime;
-        public Player(Texture2D texture,Texture2D projectileTexture,TimeSpan fireRate, Vector2 pos,Vector2 center,int distanceToCenter,PlayerIndex playerNumber, int hp)
-            : base(texture, 1, 1, pos, 0f, Color.White)
+        public Player(Texture2D texture, Texture2D projectileTexture, TimeSpan fireRate, Vector2 position, Vector2 center, int distanceToCenter, PlayerIndex playerNumber, int hp)
+            : base(texture, 1, 1, position, 0f, Color.White)
         {
             this.fireRate = fireRate;
             this.projectileTexture = projectileTexture;
@@ -31,6 +30,8 @@ namespace RescueMoonTurtle
             this.center = center;
             this.playerNumber = playerNumber;
             this.hp = hp;
+            position.X = center.X + (float)Math.Sin(rotation) * (float)distanceToCenter;
+            position.Y = center.Y - (float)Math.Cos(rotation) * (float)distanceToCenter;
         }
       
         public void Shoot(GameTime gameTime)
@@ -116,7 +117,7 @@ namespace RescueMoonTurtle
 
                 rotation =  (float)(Math.Atan2(stickInputLeft.X, stickInputLeft.Y));
 
-                rotation = Lerp(rotation, currentRotation, 0.1f);
+                rotation = Lerp(rotation, currentRotation, 0.05f);
                 
                 position.X = center.X + (float)Math.Sin(rotation) * (float)distanceToCenter;
                 position.Y = center.Y - (float)Math.Cos(rotation) * (float)distanceToCenter;
@@ -129,9 +130,10 @@ namespace RescueMoonTurtle
                 angle = (float)(Math.Atan2(stickInputRight.X, stickInputRight.Y) );
 
             }
+   
         }
-     
-        public void Update(GameTime gameTime)
+
+        public override void Update(GameTime gameTime)
         {
             if (hp <= 0)
             {
@@ -145,13 +147,12 @@ namespace RescueMoonTurtle
                
                 ControllerMove(gameTime);
                 GetAngle();
-                position += velocity;
                 Shoot(gameTime);
                 base.Update(gameTime);
             }
 
         }
-        public void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb)
         {
 
             base.Draw(sb);

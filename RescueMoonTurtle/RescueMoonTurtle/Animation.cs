@@ -29,6 +29,8 @@ namespace RescueMoonTurtle
         public bool isPaused = false;
         public float offset=1;
         public Color[] colorData;
+        public bool runOnce = false;
+        public Matrix transformation;
         public void collisionData()
         {
             colorData = new Color[frameWidth * frameHeight];
@@ -38,6 +40,7 @@ namespace RescueMoonTurtle
 
         public Animation(Texture2D spritesheet, int totalframes, float animationlength, Vector2 startposition, float startangle, Color startcolor)
         {
+            active = true;
             spriteSheet = spritesheet;
             frameHeight = spriteSheet.Height;
             frameWidth = spriteSheet.Width / totalFrames;
@@ -49,36 +52,10 @@ namespace RescueMoonTurtle
             angle = startangle;
             color = startcolor;
         }
-        public Animation(int totalframes, float animationlength, Vector2 startposition, float startangle, Color startcolor)
-        {
-            totalFrames = totalframes;
-            frameTime = animationlength / totalframes;
-            position = startposition;
-            angle = startangle;
-            color = startcolor;
-        }
+      
+  
 
-        public Animation(int totalframes, float animationlength, Vector2 startposition, float startangle, Color startcolor, bool paused)
-        {
-            isPaused = paused;
-            totalFrames = totalframes;
-            frameTime = animationlength / totalframes;
-            position = startposition;
-            angle = startangle;
-            color = startcolor;
-        }
-        bool runOnce = false;
-        public Animation(bool runonce, int totalframes, float animationlength, Vector2 startposition, float startangle, Color startcolor)
-        {
-            runOnce = runonce;
-            totalFrames = totalframes;
-            frameTime = animationlength / totalframes;
-            position = startposition;
-            angle = startangle;
-            color = startcolor;
-        }
-
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             if (active)
             {
@@ -117,6 +94,7 @@ namespace RescueMoonTurtle
                             {
                                 frameIndex = totalFrames-1;
                                 isPaused = true;
+                                active = false;
                             }
 
                         }
@@ -139,21 +117,25 @@ namespace RescueMoonTurtle
                 }
                 source = new Rectangle(frameIndex * frameWidth, 0, frameWidth, frameHeight);
                 origin = new Vector2((frameWidth / 2.0f), (frameHeight / 2.0f));
+                
                 transformation =
-                            Matrix.CreateTranslation(new Vector3(-origin, 0.0f)) *
-                            Matrix.CreateScale(scale) *
-                            Matrix.CreateTranslation(new Vector3(position, 0.0f));
+             Matrix.CreateTranslation(new Vector3(-origin, 0.0f)) *
+             Matrix.CreateScale(scale) *
+             Matrix.CreateRotationZ(angle) *
+             Matrix.CreateTranslation(new Vector3(position, 0.0f));
+                
+            
             }
             else
             {
                 frameIndex = 0;
                 isPaused = false;
             }
-            collisionData();
+            
         }
-        public Matrix transformation;
+     
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (active)
             {
