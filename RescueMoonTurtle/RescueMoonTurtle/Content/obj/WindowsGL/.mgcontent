@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>WindowsGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/exitButton.png</File>
+    <File>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/explosion.png</File>
+    <File>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/healthbar.png</File>
+    <File>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/moon.png</File>
+    <File>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/particle.png</File>
+    <File>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/playButton.png</File>
+    <File>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/player.png</File>
+    <File>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/projectile.png</File>
+    <File>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/turtle.png</File>
+    <File>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/timerFont.spritefont</File>
+  </SourceFiles>
+</SourceFileCollection>
