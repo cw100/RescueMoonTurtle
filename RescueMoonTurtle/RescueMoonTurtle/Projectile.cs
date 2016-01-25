@@ -13,7 +13,6 @@ namespace RescueMoonTurtle
         public Matrix projectileTransformation;
         public Vector2 prePosition;
         public Vector2 velocity;
-        public Rectangle hitBox;
         public float damage;
         float speed;
         Vector2 vectorAngle;
@@ -21,8 +20,6 @@ namespace RescueMoonTurtle
             : base(projectileTex, 1, 1, position, 0f, Color.White)
         
         {
-            active = true;
-            this.position = position;
             this.angle = angle;
             this.speed = speed;
             this.damage = damage;
@@ -32,7 +29,6 @@ namespace RescueMoonTurtle
                 vectorAngle = new Vector2(0, 1);
             }
             vectorAngle.Normalize();
-            hitBox = new Rectangle((int)position.X - frameWidth / 2, (int)position.Y -frameHeight / 2, frameWidth, frameHeight);
         }
         Vector2 AngleToVector(float angle)
         {
@@ -40,26 +36,26 @@ namespace RescueMoonTurtle
         }
         public void CheckInsideWindow()
         {
-            if(position.X>Game1.windowWidth||position.X<0||
-                position.Y>Game1.windowHeight||position.Y<0)
+            if(Position.X>Game1.windowWidth||Position.X<0||
+                Position.Y>Game1.windowHeight||Position.Y<0)
             {
                 active = false;
             }
         }
         public override void Update(GameTime gameTime)
         {
-            prePosition = position;
+            prePosition = Position;
             velocity = new Vector2(vectorAngle.X,vectorAngle.Y) * speed * gameTime.ElapsedGameTime.Milliseconds;
-            position += velocity;
-            hitBox.X = (int)position.X - frameWidth / 2;
-            hitBox.Y = (int)position.Y - frameHeight / 2;
+            Position += velocity;
+            hitBox.X = (int)Position.X - frameWidth / 2;
+            hitBox.Y = (int)Position.Y - frameHeight / 2;
             
             base.Update(gameTime);
             projectileTransformation =
              Matrix.CreateTranslation(new Vector3(-origin, 0.0f)) *
              Matrix.CreateScale(scale) *
-             Matrix.CreateTranslation(new Vector3(position, 0.0f));
-            Matrix.CreateTranslation(new Vector3(position, 0.0f));
+             Matrix.CreateTranslation(new Vector3(Position, 0.0f));
+            Matrix.CreateTranslation(new Vector3(Position, 0.0f));
             CheckInsideWindow();
         }
 

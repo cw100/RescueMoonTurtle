@@ -11,14 +11,13 @@ namespace RescueMoonTurtle
     class Moon : Animation
     {
         public int hp;
-        public Matrix moonTransformation;
-        public Rectangle hitBox;
-        public Moon(Texture2D texture, Vector2 pos,int hp) : base(texture,1,1,pos,0f,Color.White)
+    
+        public Moon(Texture2D texture, Vector2 position, int hp)
+            : base(texture, 1, 1, position, 0f, Color.White)
         {
 
             this.hp = hp;
-            
-            hitBox = new Rectangle((int)pos.X - frameWidth / 2, (int)pos.Y - frameHeight / 2, frameWidth, frameHeight);
+
         }
         public override void Update(GameTime gameTime)
         {
@@ -28,7 +27,7 @@ namespace RescueMoonTurtle
             }
             if (active)
             {
-                angle += 0.01f;
+                angle += 0.001f*gameTime.ElapsedGameTime.Milliseconds;
                 base.Update(gameTime);
 
             }

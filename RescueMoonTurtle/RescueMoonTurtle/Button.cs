@@ -18,7 +18,7 @@ namespace RescueMoonTurtle
         {
           
             this.buttonName = buttonname;
-            this.position = position;
+            this.Position = position;
         }
         public bool CheckForClick()
         {

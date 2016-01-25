@@ -113,37 +113,7 @@ namespace RescueMoonTurtle
 
             return false;
         }
-        public static bool LineIntersectsRect(Point p2, Point p1, Rectangle r)
-        {
-            return LineIntersectsLine(p1, p2, new Point(r.X, r.Y), new Point(r.X + r.Width, r.Y)) ||
-                   LineIntersectsLine(p1, p2, new Point(r.X + r.Width, r.Y), new Point(r.X + r.Width, r.Y + r.Height)) ||
-                   LineIntersectsLine(p1, p2, new Point(r.X + r.Width, r.Y + r.Height), new Point(r.X, r.Y + r.Height)) ||
-                   LineIntersectsLine(p1, p2, new Point(r.X, r.Y + r.Height), new Point(r.X, r.Y)) ||
-                   r.Contains(p1) || r.Contains(p2);
-        }
-
-        private static bool LineIntersectsLine(Point l1p1, Point l1p2, Point l2p1, Point l2p2)
-        {
-            float q = (l1p1.Y - l2p1.Y) * (l2p2.X - l2p1.X) - (l1p1.X - l2p1.X) * (l2p2.Y - l2p1.Y);
-            float d = (l1p2.X - l1p1.X) * (l2p2.Y - l2p1.Y) - (l1p2.Y - l1p1.Y) * (l2p2.X - l2p1.X);
-
-            if (d == 0)
-            {
-                return false;
-            }
-
-            float r = q / d;
-
-            q = (l1p1.Y - l2p1.Y) * (l1p2.X - l1p1.X) - (l1p1.X - l2p1.X) * (l1p2.Y - l1p1.Y);
-            float s = q / d;
-
-            if (r < 0 || r > 1 || s < 0 || s > 1)
-            {
-                return false;
-            }
-
-            return true;
-        }
+      
         public static Vector2 returnCollision(int x, int y, Matrix transformB)
         {
             collisionVector = Vector2.Transform(new Vector2(x, y), transformB);
@@ -151,88 +121,6 @@ namespace RescueMoonTurtle
         }
 
 
-        public static bool IsAboveAC(Rectangle collsionHitBox, Vector2 playervector)
-        {
-            return IsOnUpperSideOfLine(GetBottomRightCorner(collsionHitBox), GetTopLeftCorner(collsionHitBox), playervector);
-        }
-        public static bool IsAboveDB(Rectangle collsionHitBox, Vector2 playervector)
-        {
-            return IsOnUpperSideOfLine(GetTopRightCorner(collsionHitBox), GetBottomLeftCorner(collsionHitBox), playervector);
-        }
-
-        public static bool RectangleCollisionTop(Rectangle playerHitBox, Rectangle collsionHitBox, Vector2 velocity)
-        {
-
-
-            if (playerHitBox.Left < collsionHitBox.Right && playerHitBox.Right > collsionHitBox.Left &&
-                playerHitBox.Bottom + velocity.Y > collsionHitBox.Top && playerHitBox.Top < collsionHitBox.Top &&
-                        IsAboveAC(collsionHitBox, GetBottomRightCorner(playerHitBox)) &&
-                        IsAboveDB(collsionHitBox, GetBottomLeftCorner(playerHitBox)))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public static bool RectangleCollisionBottom(Rectangle playerHitBox, Rectangle collsionHitBox, Vector2 velocity)
-        {
-
-            if (playerHitBox.Left < collsionHitBox.Right && playerHitBox.Right > collsionHitBox.Left &&
-                playerHitBox.Top + velocity.Y < collsionHitBox.Bottom && playerHitBox.Bottom > collsionHitBox.Bottom &&
-             !IsAboveAC(collsionHitBox, GetTopLeftCorner(playerHitBox)) &&
-                        !IsAboveDB(collsionHitBox, GetTopRightCorner(playerHitBox)))
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool RectangleCollisionLeft(Rectangle playerHitBox, Rectangle collsionHitBox, Vector2 velocity)
-        {
-
-
-            if (playerHitBox.Right + velocity.X > collsionHitBox.Left && playerHitBox.Left + velocity.X < collsionHitBox.Left &&
-                   IsAboveDB(collsionHitBox, GetTopRightCorner(playerHitBox)) &&
-                        !IsAboveAC(collsionHitBox, GetBottomRightCorner(playerHitBox)))
-            {
-                return true;
-            }
-            return false;
-        }
-        public static bool RectangleCollisionRight(Rectangle playerHitBox, Rectangle collsionHitBox, Vector2 velocity)
-        {
-            if (playerHitBox.Left + velocity.X < collsionHitBox.Right && playerHitBox.Right + velocity.X > collsionHitBox.Right &&
-                IsAboveAC(collsionHitBox, GetTopLeftCorner(playerHitBox)) &&
-                        !IsAboveDB(collsionHitBox, GetBottomLeftCorner(playerHitBox)))
-            {
-                return true;
-            }
-            return false;
-        }
-        public static Vector2 GetCenter(Rectangle rect)
-        {
-            return new Vector2(rect.Center.X, rect.Center.Y);
-        }
-
-
-        public static Vector2 GetTopLeftCorner(Rectangle rect)
-        {
-            return new Vector2(rect.X, rect.Y);
-        }
-        public static Vector2 GetTopRightCorner(Rectangle rect)
-        {
-            return new Vector2(rect.X + rect.Width, rect.Y);
-        }
-        public static Vector2 GetBottomRightCorner(Rectangle rect)
-        {
-            return new Vector2(rect.X + rect.Width, rect.Y + rect.Height);
-        }
-        public static Vector2 GetBottomLeftCorner(Rectangle rect)
-        {
-            return new Vector2(rect.X, rect.Y + rect.Height);
-        }
-        public static bool IsOnUpperSideOfLine(Vector2 corner1, Vector2 oppositeCorner, Vector2 playerHitBoxCenter)
-        {
-            return ((oppositeCorner.X - corner1.X) * (playerHitBoxCenter.Y - corner1.Y) - (oppositeCorner.Y - corner1.Y) * (playerHitBoxCenter.X - corner1.X)) > 0;
-        }
+       
     }
 }

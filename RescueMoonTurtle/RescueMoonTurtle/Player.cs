@@ -11,9 +11,9 @@ namespace RescueMoonTurtle
     class Player : Animation
     {
         public PlayerIndex playerNumber;
-        public Vector2 center;
+        public Vector2 gravityCenter;
         public int hp;
-        public float rotation=0;
+        public float rotation;
         GamePadState gamePadState;
         Vector2 stickInputRight, stickInputLeft;
         public int distanceToCenter;
@@ -27,11 +27,11 @@ namespace RescueMoonTurtle
             this.fireRate = fireRate;
             this.projectileTexture = projectileTexture;
             this.distanceToCenter = distanceToCenter;
-            this.center = center;
+            this.gravityCenter = center;
             this.playerNumber = playerNumber;
             this.hp = hp;
-            position.X = center.X + (float)Math.Sin(rotation) * (float)distanceToCenter;
-            position.Y = center.Y - (float)Math.Cos(rotation) * (float)distanceToCenter;
+            X = center.X + (float)Math.Sin(rotation) * (float)distanceToCenter;
+            Y = center.Y - (float)Math.Cos(rotation) * (float)distanceToCenter;
         }
       
         public void Shoot(GameTime gameTime)
@@ -44,7 +44,7 @@ namespace RescueMoonTurtle
                     Vector2 shootOffset = new Vector2(0, frameHeight/2);
 
 
-                    Vector2 shootPosition = position + 
+                    Vector2 shootPosition = Position + 
                         new Vector2(shootOffset.Length() * (float)Math.Sin((double)angle), -shootOffset.Length() * (float)Math.Cos((double)angle));
                  
                     Projectile projectile = new Projectile(projectileTexture, shootPosition, 1f, angle-(float)Math.PI/2, 10f);
@@ -119,8 +119,8 @@ namespace RescueMoonTurtle
 
                 rotation = Lerp(rotation, currentRotation, 0.05f);
                 
-                position.X = center.X + (float)Math.Sin(rotation) * (float)distanceToCenter;
-                position.Y = center.Y - (float)Math.Cos(rotation) * (float)distanceToCenter;
+                X = gravityCenter.X + (float)Math.Sin(rotation) * (float)distanceToCenter;
+                Y = gravityCenter.Y - (float)Math.Cos(rotation) * (float)distanceToCenter;
             }
         }
         public void GetAngle()

@@ -10,6 +10,7 @@ namespace RescueMoonTurtle
 {
     public class Animation
     {
+        public Rectangle hitBox;
         public bool reversed =false;
         public float scale = 1f;
         public bool active = true;
@@ -21,7 +22,23 @@ namespace RescueMoonTurtle
         int totalFrames=1;
         public int frameHeight;
         public int frameWidth;
-        public Vector2 position;
+        private Vector2 position;
+
+        public Vector2 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+        public float X
+        {
+            get { return position.X; }
+            set { position.X = value; }
+        }
+        public float Y
+        {
+            get { return position.Y; }
+            set { position.Y = value; }
+        }
         public Vector2 origin;
         Rectangle source;
         public float angle;
@@ -51,6 +68,8 @@ namespace RescueMoonTurtle
             position = startposition;
             angle = startangle;
             color = startcolor;
+
+            hitBox = new Rectangle((int)X - frameWidth / 2, (int)Y - frameHeight / 2, frameWidth, frameHeight);
         }
       
   
