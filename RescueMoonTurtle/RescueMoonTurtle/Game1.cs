@@ -199,7 +199,7 @@ namespace RescueMoonTurtle
         {
             if (noControllers)
             {
-                Player player = new Player(LoadTexture(this.Content, "player"), projectileTexture, TimeSpan.FromSeconds(0.1), new Vector2(0, 0),
+                Player player = new Player(LoadTexture(this.Content, "player"), projectileTexture, TimeSpan.FromSeconds(0.2), new Vector2(0, 0),
                 new Vector2(windowWidth / 2, windowHeight / 2),
                 175, (PlayerIndex)1, 100, true);
                 player.color = Color.Green;
@@ -213,7 +213,7 @@ namespace RescueMoonTurtle
             {
                 for (int i = 0; i < numberOfPlayers; i++)
                 {
-                    Player player = new Player(LoadTexture(this.Content, "player"), projectileTexture, TimeSpan.FromSeconds(0.1), new Vector2(0, 0),
+                    Player player = new Player(LoadTexture(this.Content, "player"), projectileTexture, TimeSpan.FromSeconds(0.2), new Vector2(0, 0),
                      new Vector2(windowWidth / 2, windowHeight / 2),
                      175, (PlayerIndex)i, 100, false);
                     switch (i)

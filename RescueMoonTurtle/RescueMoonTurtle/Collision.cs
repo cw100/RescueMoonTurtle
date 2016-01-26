@@ -18,7 +18,6 @@ namespace RescueMoonTurtle
             return CollidesWith(objectA, objectB, true);
         }
       
-
         public static bool CollidesWith(Animation objectA, Animation objectB, bool calcPerPixel)
         {
 
