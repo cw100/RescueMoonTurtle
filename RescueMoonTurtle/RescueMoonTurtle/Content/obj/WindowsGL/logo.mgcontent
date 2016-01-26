@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/logo.png</SourceFile>
-  <SourceTime>2016-01-25T19:59:00.0461429+00:00</SourceTime>
-  <DestFile>C:/Users/Connor/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/bin/WindowsGL/logo.xnb</DestFile>
-  <DestTime>2016-01-25T20:01:03.8473847+00:00</DestTime>
+  <SourceFile>C:/Users/admin/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/logo.png</SourceFile>
+  <SourceTime>2016-01-26T08:50:40.470955+00:00</SourceTime>
+  <DestFile>C:/Users/admin/Documents/RescueMoonTurtle/RescueMoonTurtle/RescueMoonTurtle/Content/bin/WindowsGL/logo.xnb</DestFile>
+  <DestTime>2016-01-26T08:52:56.1717166+00:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2015-04-29T18:14:44+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

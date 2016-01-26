@@ -187,7 +187,7 @@ namespace RescueMoonTurtle
                 }
                 else
                 {
-                    if (GamePad.GetState(playerNumber).Triggers.Right >= 0.5f)
+                    if (gamePadState.Triggers.Right >= 0.5f)
                     {
                         Shoot(gameTime);
                     }

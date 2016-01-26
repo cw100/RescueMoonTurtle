@@ -75,7 +75,7 @@ namespace RescueMoonTurtle
             numberOfPlayers = 0;
             for (int i = 0; i < 4; i++)
             {
-                if (GamePad.GetState((PlayerIndex)i).IsConnected)
+                if (GamePad.GetState((PlayerIndex)i, GamePadDeadZone.None).IsConnected)
                 {
                     numberOfPlayers++;
                 }
@@ -95,7 +95,7 @@ namespace RescueMoonTurtle
                 new Vector2(windowWidth / 2, windowHeight / 2), 100);
             gameTimeScore = TimeSpan.FromSeconds(0);
             elapsedBigTurtleSpawnTime = TimeSpan.FromSeconds(0);
-            
+            elapsedEndGameTime =  TimeSpan.FromSeconds(0);
             elapsedDifficulityIncreaseTime = TimeSpan.FromSeconds(0);
         }
         public void InitializeStartMenu()
@@ -353,7 +353,7 @@ namespace RescueMoonTurtle
             noControllers = true;
             for (int i = 0; i < 4; i++)
             {
-                if (GamePad.GetState((PlayerIndex)i).IsConnected)
+                if (GamePad.GetState((PlayerIndex)i, GamePadDeadZone.None).IsConnected)
                 {
                     noControllers = false;
                 }
@@ -409,12 +409,12 @@ namespace RescueMoonTurtle
                 elapsedMenuTime += TimeSpan.FromSeconds(gameTime.ElapsedGameTime.TotalSeconds);
                 if (elapsedMenuTime > menuTime)
                 {
-                    if ((GamePad.GetState(num).ThumbSticks.Left.Y) >= 0.25)
+                    if ((GamePad.GetState(num, GamePadDeadZone.None).ThumbSticks.Left.Y) >= 0.25)
                     {
                         currentMenuItem -= 1;
 
                     }
-                    if ((GamePad.GetState(num).ThumbSticks.Left.Y) <= -0.25)
+                    if ((GamePad.GetState(num, GamePadDeadZone.None).ThumbSticks.Left.Y) <= -0.25)
                     {
                         currentMenuItem += 1;
 
@@ -532,7 +532,7 @@ namespace RescueMoonTurtle
                 elapsedEndGameTime += TimeSpan.FromSeconds(gameTime.ElapsedGameTime.TotalSeconds);
                 if (elapsedEndGameTime > endGameDelay)
                 {
-                    if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space))
+                    if (GamePad.GetState(PlayerIndex.One, GamePadDeadZone.None).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space))
                     {
                         try
                         {
@@ -557,7 +557,7 @@ namespace RescueMoonTurtle
      
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One, GamePadDeadZone.None).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             mouseState = Mouse.GetState();
             if (currentState == GameStates.StartMenu)
