@@ -19,14 +19,14 @@ namespace RescueMoonTurtle
         Vector2 stickInputRight, stickInputLeft;
         public int distanceToCenter;
         Texture2D projectileTexture;
-        KeyboardState keyboardState ;
+        KeyboardState keyboardState;
         MouseState mouseState;
-        TimeSpan fireRate ;
+        TimeSpan fireRate;
         TimeSpan previousFireTime;
-        public Player(Texture2D texture, Texture2D projectileTexture, TimeSpan fireRate, Vector2 position, Vector2 center, int distanceToCenter, PlayerIndex playerNumber, int hp,bool keyboardControl)
+        public Player(Texture2D texture, Texture2D projectileTexture, TimeSpan fireRate, Vector2 position, Vector2 center, int distanceToCenter, PlayerIndex playerNumber, int hp, bool keyboardControl)
             : base(texture, position)
         {
-            this.keyboardControl = keyboardControl ;
+            this.keyboardControl = keyboardControl;
             this.fireRate = fireRate;
             this.projectileTexture = projectileTexture;
             this.distanceToCenter = distanceToCenter;
@@ -36,23 +36,23 @@ namespace RescueMoonTurtle
             X = center.X + (float)Math.Sin(rotation) * (float)distanceToCenter;
             Y = center.Y - (float)Math.Cos(rotation) * (float)distanceToCenter;
         }
-      
+
         public void Shoot(GameTime gameTime)
         {
 
             if (gameTime.TotalGameTime - previousFireTime > fireRate)
             {
-               
-                    Vector2 shootOffset = new Vector2(0, frameHeight/2);
+
+                Vector2 shootOffset = new Vector2(0, frameHeight / 2);
 
 
-                    Vector2 shootPosition = Position + 
-                        new Vector2(shootOffset.Length() * (float)Math.Sin((double)angle), -shootOffset.Length() * (float)Math.Cos((double)angle));
-                 
-                    Projectile projectile = new Projectile(projectileTexture, shootPosition, 1f, angle-(float)Math.PI/2, 10f);
-                    previousFireTime = gameTime.TotalGameTime;
-                    Game1.projectiles.Add(projectile);
-                
+                Vector2 shootPosition = Position +
+                    new Vector2(shootOffset.Length() * (float)Math.Sin((double)angle), -shootOffset.Length() * (float)Math.Cos((double)angle));
+
+                Projectile projectile = new Projectile(projectileTexture, shootPosition, 1f, angle - (float)Math.PI / 2, 10f);
+                previousFireTime = gameTime.TotalGameTime;
+                Game1.projectiles.Add(projectile);
+
             }
         }
         public void GetInputRight()
@@ -87,29 +87,29 @@ namespace RescueMoonTurtle
                 stickInputLeft = normalizedInput * ((stickInputLeft.Length() - deadzone) / (1 - deadzone));
             }
         }
-        public static float Lerp(float targetAngle,float currentAngle, float turnSpeed) 
+        public static float Lerp(float targetAngle, float currentAngle, float turnSpeed)
+        {
+
+            float difference = WrapAngle(targetAngle - currentAngle);
+
+            difference = MathHelper.Clamp(difference, -turnSpeed, turnSpeed);
+
+            return WrapAngle(currentAngle + difference);
+        }
+
+        public static float WrapAngle(float radians)
+        {
+            while (radians < -MathHelper.Pi)
             {
+                radians += MathHelper.TwoPi;
+            }
+            while (radians > MathHelper.Pi)
+            {
+                radians -= MathHelper.TwoPi;
+            }
+            return radians;
+        }
 
-                float difference = WrapAngle(targetAngle - currentAngle); 
-
-                difference = MathHelper.Clamp(difference, -turnSpeed, turnSpeed); 
-
-                return WrapAngle(currentAngle + difference); 
-            } 
- 
-        public static float WrapAngle(float radians) 
-                { 
-                    while (radians < -MathHelper.Pi) 
-                    { 
-                        radians += MathHelper.TwoPi; 
-                    } 
-                    while (radians > MathHelper.Pi) 
-                    { 
-                        radians -= MathHelper.TwoPi; 
-                    } 
-                    return radians; 
-                } 
-        
         public void ControllerMove(GameTime gameTime)
         {
 
@@ -117,10 +117,10 @@ namespace RescueMoonTurtle
             {
                 float currentRotation = rotation;
 
-                rotation =  (float)(Math.Atan2(stickInputLeft.X, stickInputLeft.Y));
+                rotation = (float)(Math.Atan2(stickInputLeft.X, stickInputLeft.Y));
 
                 rotation = Lerp(rotation, currentRotation, 0.05f);
-                
+
                 X = gravityCenter.X + (float)Math.Sin(rotation) * (float)distanceToCenter;
                 Y = gravityCenter.Y - (float)Math.Cos(rotation) * (float)distanceToCenter;
             }
@@ -128,16 +128,17 @@ namespace RescueMoonTurtle
         public void KeyboardMove(GameTime gameTime)
         {
 
-            if (keyboardState.IsKeyDown(Keys.A))
+            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
 
-                rotation -= 0.003f*gameTime.ElapsedGameTime.Milliseconds;
-             
+                rotation -= 0.003f * gameTime.ElapsedGameTime.Milliseconds;
+
             }
-            if (keyboardState.IsKeyDown(Keys.D))
+            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
 
                 rotation += 0.003f * gameTime.ElapsedGameTime.Milliseconds;
+
 
             }
             X = gravityCenter.X + (float)Math.Sin(rotation) * (float)distanceToCenter;
@@ -147,7 +148,7 @@ namespace RescueMoonTurtle
         {
             if (stickInputRight.X != 0 || stickInputRight.Y != 0)
             {
-                angle = (float)(Math.Atan2(stickInputRight.X, stickInputRight.Y) );
+                angle = (float)(Math.Atan2(stickInputRight.X, stickInputRight.Y));
 
             }
             if (keyboardControl)
@@ -155,8 +156,8 @@ namespace RescueMoonTurtle
                 angle = (float)(Math.Atan2(-(X - mouseState.X), Y - mouseState.Y));
             }
 
-           
-   
+
+
         }
 
         public override void Update(GameTime gameTime)
@@ -180,7 +181,7 @@ namespace RescueMoonTurtle
                 GetAngle();
                 if (keyboardControl)
                 {
-                    if (mouseState.LeftButton ==ButtonState.Pressed)
+                    if (mouseState.LeftButton == ButtonState.Pressed)
                     {
                         Shoot(gameTime);
                     }
