@@ -100,14 +100,7 @@ namespace RescueMoonTurtle
         }
         public void InitializeStartMenu()
         {
-            noControllers = true;
-            for (int i = 0; i < 4; i++)
-            {
-                if (GamePad.GetState((PlayerIndex)i).IsConnected)
-                {
-                    noControllers = false;
-                }
-            }
+           
             
             startMenuButtons = new List<Button>();
             Button button = new Button(new Vector2(windowWidth / 2, windowHeight * 2 / 5), playButton, "play");
@@ -146,7 +139,7 @@ namespace RescueMoonTurtle
             }
             bigTurtleSpawnTime=TimeSpan.FromSeconds(10);
             difficulityIncreaseTime = TimeSpan.FromSeconds(10);
-            endGameDelay = TimeSpan.FromSeconds(1.5);
+            endGameDelay = TimeSpan.FromSeconds(1);
             base.Initialize();
             InitializeGame();
             InitializeStartMenu();
@@ -357,6 +350,14 @@ namespace RescueMoonTurtle
 
         public void UpdateStartMenu(GameTime gameTime)
         {
+            noControllers = true;
+            for (int i = 0; i < 4; i++)
+            {
+                if (GamePad.GetState((PlayerIndex)i).IsConnected)
+                {
+                    noControllers = false;
+                }
+            }
             int currentSelected=1;
             if (!noControllers)
             {
