@@ -61,9 +61,9 @@ namespace RescueMoonTurtle
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferHeight = 1050;
+            graphics.PreferredBackBufferHeight = 900;
 
-            graphics.PreferredBackBufferWidth = 1680;
+            graphics.PreferredBackBufferWidth = 1500;
 
             windowWidth = graphics.PreferredBackBufferWidth;
             windowHeight = graphics.PreferredBackBufferHeight;
@@ -626,7 +626,7 @@ namespace RescueMoonTurtle
 
                 timeString = gameTimeScore.ToString(@"mm\.ss");
                 Vector2 FontOrigin = timerFont.MeasureString(timeString) / 2;
-                spriteBatch.DrawString(timerFont, timeString, new Vector2(1500, 30), Color.White,
+                spriteBatch.DrawString(timerFont, timeString, new Vector2(50, 30), Color.White,
                               0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
             }
             else
