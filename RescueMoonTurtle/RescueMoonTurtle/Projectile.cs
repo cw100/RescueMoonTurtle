@@ -8,32 +8,37 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace RescueMoonTurtle
 {
+    //Inherits from animation class (EXAMPLE OF INHERITANCE)
     public class Projectile : Animation
     {
-        public Matrix projectileTransformation;
-        public Vector2 prePosition;
         public Vector2 velocity;
-        public float damage;
         float speed;
         Vector2 vectorAngle;
-        public Projectile(Texture2D projectileTex, Vector2 position, float speed, float angle, float damage)
+        //Constructor creates new projectile and projectile animation via the base class constructor
+        public Projectile(Texture2D projectileTex, Vector2 position, float speed, float angle)
             : base(projectileTex, position,angle,Color.White)
         
         {
+            //Angle projectile is fired at
             this.angle = angle;
+            //Projectile speed per millisecond
             this.speed = speed;
-            this.damage = damage;
+            //Turns angle into vector for projectile movement
             vectorAngle = AngleToVector(angle);
+            //If the vector is 0, creates a default unit vector
             if (vectorAngle.X == 0 && vectorAngle.Y == 0)
             {
                 vectorAngle = new Vector2(0, 1);
             }
+            //Creates unit vector
             vectorAngle.Normalize();
         }
+        //Turns angle into vector
         Vector2 AngleToVector(float angle)
         {
             return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
         }
+        //Disables projectile after leaving game window
         public void CheckInsideWindow()
         {
             if(Position.X>Game1.windowWidth||Position.X<0||
@@ -42,30 +47,28 @@ namespace RescueMoonTurtle
                 active = false;
             }
         }
+        //Projectile game update logic
         public override void Update(GameTime gameTime)
         {
-            prePosition = Position;
-            velocity = new Vector2(vectorAngle.X,vectorAngle.Y) * speed * gameTime.ElapsedGameTime.Milliseconds;
+            //Creates velocity, in the direction of the angle vector, with a length of projectiles speed for every millisecond since last frame
+            velocity = vectorAngle * speed * gameTime.ElapsedGameTime.Milliseconds;
+
+            //Adds velocity to projectile animation position 
             Position += velocity;
-            hitBox.X = (int)Position.X - frameWidth / 2;
-            hitBox.Y = (int)Position.Y - frameHeight / 2;
-            
-            base.Update(gameTime);
-            projectileTransformation =
-             Matrix.CreateTranslation(new Vector3(-origin, 0.0f)) *
-             Matrix.CreateScale(scale) *
-             Matrix.CreateTranslation(new Vector3(Position, 0.0f));
-            Matrix.CreateTranslation(new Vector3(Position, 0.0f));
+            //Disables projectile after leaving game window
             CheckInsideWindow();
+            //Animation base class update
+            base.Update(gameTime);
+           
+            
         }
 
-
+        //Projectile draw logic
         public override void Draw(SpriteBatch sb)
         {
-            if (active)
-            {
+            //Animation base class draw
                 base.Draw(sb);
-            }
         }
+        
     }
 }
