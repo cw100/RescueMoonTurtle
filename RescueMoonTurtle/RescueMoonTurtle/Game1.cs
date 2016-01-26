@@ -531,7 +531,7 @@ namespace RescueMoonTurtle
                 elapsedEndGameTime += TimeSpan.FromSeconds(gameTime.ElapsedGameTime.TotalSeconds);
                 if (elapsedEndGameTime > endGameDelay)
                 {
-                    if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed)
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space))
                     {
                         try
                         {
@@ -580,7 +580,8 @@ namespace RescueMoonTurtle
             string highScoreTitle = "HighScores:";
 
             Vector2 FontOrigin = timerFont.MeasureString(highScoreTitle);
-            spriteBatch.DrawString(timerFont, highScoreTitle, new Vector2(timerFont.MeasureString(highScoreTitle).X + 10, timerFont.MeasureString(highScoreTitle).Y + 10), Color.White,
+            spriteBatch.DrawString(timerFont, highScoreTitle, new Vector2(timerFont.MeasureString(highScoreTitle).X + 10,
+                timerFont.MeasureString(highScoreTitle).Y + 10), Color.White,
                           0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
 
             for (int i = 0; i < scores.Count; i++)
@@ -631,7 +632,7 @@ namespace RescueMoonTurtle
             {
                 string endGameString = "Game Over!\nYour Time Was:\n" +
                     gameTimeScore.ToString(@"mm\.ss") +
-                    "\nPress Start To Return To The Main Menu";
+                    "\nPress Start Or Space To Return To The Main Menu";
                 Vector2 FontOrigin = timerFont.MeasureString(endGameString) / 2;
                 spriteBatch.DrawString(timerFont, endGameString, new Vector2(windowWidth / 2, windowHeight / 2), Color.White,
                               0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
