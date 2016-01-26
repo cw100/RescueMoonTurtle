@@ -17,7 +17,7 @@ namespace RescueMoonTurtle
         float speed;
         Vector2 vectorAngle;
         public Projectile(Texture2D projectileTex, Vector2 position, float speed, float angle, float damage)
-            : base(projectileTex, 1, 1, position, 0f, Color.White)
+            : base(projectileTex, position,angle,Color.White)
         
         {
             this.angle = angle;

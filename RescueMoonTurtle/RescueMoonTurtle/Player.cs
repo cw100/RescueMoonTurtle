@@ -24,7 +24,7 @@ namespace RescueMoonTurtle
         TimeSpan fireRate ;
         TimeSpan previousFireTime;
         public Player(Texture2D texture, Texture2D projectileTexture, TimeSpan fireRate, Vector2 position, Vector2 center, int distanceToCenter, PlayerIndex playerNumber, int hp,bool keyboardControl)
-            : base(texture, 1, 1, position, 0f, Color.White)
+            : base(texture, position)
         {
             this.keyboardControl = keyboardControl ;
             this.fireRate = fireRate;

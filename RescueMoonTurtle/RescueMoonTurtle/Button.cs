@@ -15,7 +15,7 @@ namespace RescueMoonTurtle
         public string buttonName;
         public bool pressed = false;
         public Button(Vector2 position, Texture2D buttonTexture, string buttonname)
-            : base(buttonTexture, 1, 1, position, 0f, Color.White)
+            : base(buttonTexture, position)
         {
           
             this.buttonName = buttonname;

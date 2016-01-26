@@ -56,21 +56,76 @@ namespace RescueMoonTurtle
         }
        
 
-        public Animation(Texture2D spritesheet, int totalframes, float animationlength, Vector2 startposition, float startangle, Color startcolor)
+        public Animation(Texture2D spriteSheet, int totalFrames, float animationLength, Vector2 position, float angle, Color color)
         {
             active = true;
-            spriteSheet = spritesheet;
+            this.spriteSheet = spriteSheet;
             frameHeight = spriteSheet.Height;
             frameWidth = spriteSheet.Width / totalFrames;
             collisionData();
 
-            totalFrames = totalframes;
-            frameTime = animationlength / totalframes;
-            position = startposition;
-            angle = startangle;
-            color = startcolor;
+            this.totalFrames = totalFrames;
+            this.frameTime = animationLength / totalFrames;
+            this.position = position;
+            this.angle = angle;
+            this.color = color;
 
-            hitBox = new Rectangle((int)X - (int)(frameWidth * scale / 2), (int)Y - (int)(frameHeight * scale / 2), (int)(frameWidth * scale), (int)(frameHeight * scale));
+            hitBox = new Rectangle((int)X - (int)(frameWidth * scale / 2), (int)Y - (int)(frameHeight * scale / 2),
+                (int)(frameWidth * scale), (int)(frameHeight * scale));
+        }
+        public Animation(Texture2D spriteSheet, Vector2 position, float angle, Color color)
+        {
+
+            this.totalFrames = 1;
+            this.frameTime = 1;
+            active = true;
+            this.spriteSheet = spriteSheet;
+            frameHeight = spriteSheet.Height;
+            frameWidth = spriteSheet.Width / totalFrames;
+            collisionData();
+
+            this.position = position;
+            this.angle = angle;
+            this.color = color;
+
+            hitBox = new Rectangle((int)X - (int)(frameWidth * scale / 2), (int)Y - (int)(frameHeight * scale / 2),
+                (int)(frameWidth * scale), (int)(frameHeight * scale));
+        }
+        public Animation(Texture2D spriteSheet, int totalFrames, float animationlength, Vector2 position)
+        {
+            active = true; 
+            this.spriteSheet = spriteSheet;
+            frameHeight = spriteSheet.Height;
+            frameWidth = spriteSheet.Width / totalFrames;
+            collisionData();
+
+            this.totalFrames = totalFrames;
+            this.frameTime = animationlength / totalFrames;
+
+            this.position = position;
+            angle = 0f;
+            color = Color.White;
+
+            hitBox = new Rectangle((int)X - (int)(frameWidth * scale / 2), (int)Y - (int)(frameHeight * scale / 2),
+                (int)(frameWidth * scale), (int)(frameHeight * scale));
+        }
+        public Animation(Texture2D spriteSheet, Vector2 position)
+        {
+            active = true;
+            totalFrames = 1;
+            frameTime = 1;
+            this.spriteSheet = spriteSheet;
+            frameHeight = spriteSheet.Height;
+            frameWidth = spriteSheet.Width / totalFrames;
+            collisionData();
+
+           
+            this.position = position;
+            angle = 0f;
+            color = Color.White;
+
+            hitBox = new Rectangle((int)X - (int)(frameWidth * scale / 2), (int)Y - (int)(frameHeight * scale / 2),
+                (int)(frameWidth * scale), (int)(frameHeight * scale));
         }
       
   
@@ -79,8 +134,6 @@ namespace RescueMoonTurtle
         {
             if (active)
             {
-                frameHeight = spriteSheet.Height;
-                frameWidth = spriteSheet.Width / totalFrames;
                 time += (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (!isPaused)
                 {
@@ -108,7 +161,6 @@ namespace RescueMoonTurtle
                                     frameIndex = totalFrames - 1;
                                 }
 
-                                
                             }
                             else
                             {
