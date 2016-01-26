@@ -10,6 +10,7 @@ namespace RescueMoonTurtle
 {
     class Player : Animation
     {
+        bool keyboardControl;
         public PlayerIndex playerNumber;
         public Vector2 gravityCenter;
         public int hp;
@@ -18,12 +19,14 @@ namespace RescueMoonTurtle
         Vector2 stickInputRight, stickInputLeft;
         public int distanceToCenter;
         Texture2D projectileTexture;
-
+        KeyboardState keyboardState ;
+        MouseState mouseState;
         TimeSpan fireRate ;
         TimeSpan previousFireTime;
-        public Player(Texture2D texture, Texture2D projectileTexture, TimeSpan fireRate, Vector2 position, Vector2 center, int distanceToCenter, PlayerIndex playerNumber, int hp)
+        public Player(Texture2D texture, Texture2D projectileTexture, TimeSpan fireRate, Vector2 position, Vector2 center, int distanceToCenter, PlayerIndex playerNumber, int hp,bool keyboardControl)
             : base(texture, 1, 1, position, 0f, Color.White)
         {
+            this.keyboardControl = keyboardControl ;
             this.fireRate = fireRate;
             this.projectileTexture = projectileTexture;
             this.distanceToCenter = distanceToCenter;
@@ -39,8 +42,7 @@ namespace RescueMoonTurtle
 
             if (gameTime.TotalGameTime - previousFireTime > fireRate)
             {
-                if (GamePad.GetState(playerNumber).Triggers.Right >= 0.5f)
-                {
+               
                     Vector2 shootOffset = new Vector2(0, frameHeight/2);
 
 
@@ -50,7 +52,7 @@ namespace RescueMoonTurtle
                     Projectile projectile = new Projectile(projectileTexture, shootPosition, 1f, angle-(float)Math.PI/2, 10f);
                     previousFireTime = gameTime.TotalGameTime;
                     Game1.projectiles.Add(projectile);
-                }
+                
             }
         }
         public void GetInputRight()
@@ -123,6 +125,24 @@ namespace RescueMoonTurtle
                 Y = gravityCenter.Y - (float)Math.Cos(rotation) * (float)distanceToCenter;
             }
         }
+        public void KeyboardMove(GameTime gameTime)
+        {
+
+            if (keyboardState.IsKeyDown(Keys.A))
+            {
+
+                rotation -= 0.003f*gameTime.ElapsedGameTime.Milliseconds;
+             
+            }
+            if (keyboardState.IsKeyDown(Keys.D))
+            {
+
+                rotation += 0.003f * gameTime.ElapsedGameTime.Milliseconds;
+
+            }
+            X = gravityCenter.X + (float)Math.Sin(rotation) * (float)distanceToCenter;
+            Y = gravityCenter.Y - (float)Math.Cos(rotation) * (float)distanceToCenter;
+        }
         public void GetAngle()
         {
             if (stickInputRight.X != 0 || stickInputRight.Y != 0)
@@ -130,6 +150,12 @@ namespace RescueMoonTurtle
                 angle = (float)(Math.Atan2(stickInputRight.X, stickInputRight.Y) );
 
             }
+            if (keyboardControl)
+            {
+                angle = (float)(Math.Atan2(-(X - mouseState.X), Y - mouseState.Y));
+            }
+
+           
    
         }
 
@@ -141,13 +167,31 @@ namespace RescueMoonTurtle
             }
             if (active)
             {
+                keyboardState = Keyboard.GetState();
+                mouseState = Mouse.GetState();
                 gamePadState = GamePad.GetState(playerNumber, GamePadDeadZone.None);
                 GetInputLeft();
                 GetInputRight();
-               
+                if (keyboardControl)
+                {
+                    KeyboardMove(gameTime);
+                }
                 ControllerMove(gameTime);
                 GetAngle();
-                Shoot(gameTime);
+                if (keyboardControl)
+                {
+                    if (mouseState.LeftButton ==ButtonState.Pressed)
+                    {
+                        Shoot(gameTime);
+                    }
+                }
+                else
+                {
+                    if (GamePad.GetState(playerNumber).Triggers.Right >= 0.5f)
+                    {
+                        Shoot(gameTime);
+                    }
+                }
                 base.Update(gameTime);
             }
 

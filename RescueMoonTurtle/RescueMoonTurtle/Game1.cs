@@ -14,18 +14,27 @@ namespace RescueMoonTurtle
 
     public class Game1 : Game
     {
+        bool noControllers;
+        MouseState mouseState;
         string timeString;
         string path = @"Score.txt";
         List<float> scores;
         SpriteFont timerFont;
         TimeSpan gameTimeScore;
+        TimeSpan endGameDelay;
+        TimeSpan elapsedEndGameTime;
+        TimeSpan difficulityIncreaseTime;
+        TimeSpan elapsedDifficulityIncreaseTime;
+        TimeSpan bigTurtleSpawnTime;
+        TimeSpan elapsedBigTurtleSpawnTime;
+        Texture2D cursor;
         Texture2D whiteRectangle;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Moon moon;
         Texture2D explosionTexture;
         List<Animation> explosions;
-        TimeSpan previousSpawnTime;
+        TimeSpan elapsedSpawnTime;
         TimeSpan spawnTime;
         Texture2D projectileTexture;
         Texture2D turtleTexture;
@@ -71,7 +80,11 @@ namespace RescueMoonTurtle
                     numberOfPlayers++;
                 }
             }
-            spawnTime = TimeSpan.FromSeconds(1 / (numberOfPlayers));
+            if( numberOfPlayers ==0)
+            {
+                numberOfPlayers = 1;
+            }
+            spawnTime = TimeSpan.FromSeconds(1.5/(double)numberOfPlayers);
             maxTurtles = 20;
             players = new List<Player>();
             projectiles = new List<Projectile>();
@@ -81,11 +94,21 @@ namespace RescueMoonTurtle
             moon = new Moon(moonTexture,
                 new Vector2(windowWidth / 2, windowHeight / 2), 100);
             gameTimeScore = TimeSpan.FromSeconds(0);
-            difficulityIncreaseTime = TimeSpan.FromSeconds(10);
+            elapsedBigTurtleSpawnTime = TimeSpan.FromSeconds(0);
+            
             elapsedDifficulityIncreaseTime = TimeSpan.FromSeconds(0);
         }
         public void InitializeStartMenu()
         {
+            noControllers = true;
+            for (int i = 0; i < 4; i++)
+            {
+                if (GamePad.GetState((PlayerIndex)i).IsConnected)
+                {
+                    noControllers = false;
+                }
+            }
+            
             startMenuButtons = new List<Button>();
             Button button = new Button(new Vector2(windowWidth / 2, windowHeight * 2 / 5), playButton, "play");
             startMenuButtons.Add(button);
@@ -121,7 +144,8 @@ namespace RescueMoonTurtle
                 }
 
             }
-
+            bigTurtleSpawnTime=TimeSpan.FromSeconds(10);
+            difficulityIncreaseTime = TimeSpan.FromSeconds(10);
             endGameDelay = TimeSpan.FromSeconds(1.5);
             base.Initialize();
             InitializeGame();
@@ -157,6 +181,7 @@ namespace RescueMoonTurtle
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            cursor = LoadTexture(this.Content, "particle");
             timerFont = this.Content.Load<SpriteFont>("timerFont");
             playButton = LoadTexture(this.Content, "playButton");
             exitButton = LoadTexture(this.Content, "exitButton");
@@ -179,43 +204,58 @@ namespace RescueMoonTurtle
 
         public void LoadPlayers()
         {
-            for (int i = 0; i < numberOfPlayers; i++)
+            if (noControllers)
             {
                 Player player = new Player(LoadTexture(this.Content, "player"), projectileTexture, TimeSpan.FromSeconds(0.1), new Vector2(0, 0),
-                 new Vector2(windowWidth / 2, windowHeight / 2),
-                 175, (PlayerIndex)i, 100);
-                switch (i)
-                {
-                    case 0:
-                        player.color = Color.Green;
-                        player.rotation = 0;
+                new Vector2(windowWidth / 2, windowHeight / 2),
+                175, (PlayerIndex)1, 100, true);
+                player.color = Color.Green;
+                player.rotation = 0;
 
-                        player.X = player.gravityCenter.X + (float)Math.Sin(player.rotation) * (float)player.distanceToCenter;
-                        player.Y = player.gravityCenter.Y - (float)Math.Cos(player.rotation) * (float)player.distanceToCenter;
-                        break;
-                    case 1:
-                        player.color = Color.Yellow;
-                        player.rotation = (float)Math.PI / 2;
-
-                        player.X = player.gravityCenter.X + (float)Math.Sin(player.rotation) * (float)player.distanceToCenter;
-                        player.Y = player.gravityCenter.Y - (float)Math.Cos(player.rotation) * (float)player.distanceToCenter;
-                        break;
-                    case 2:
-                        player.color = Color.Red;
-                        player.rotation = (float)Math.PI;
-
-                        player.X = player.gravityCenter.X + (float)Math.Sin(player.rotation) * (float)player.distanceToCenter;
-                        player.Y = player.gravityCenter.Y - (float)Math.Cos(player.rotation) * (float)player.distanceToCenter;
-                        break;
-                    case 3:
-                        player.color = Color.Blue;
-                        player.rotation = -(float)Math.PI / 2;
-
-                        player.X = player.gravityCenter.X + (float)Math.Sin(player.rotation) * (float)player.distanceToCenter;
-                        player.Y = player.gravityCenter.Y - (float)Math.Cos(player.rotation) * (float)player.distanceToCenter;
-                        break;
-                }
+                player.X = player.gravityCenter.X + (float)Math.Sin(player.rotation) * (float)player.distanceToCenter;
+                player.Y = player.gravityCenter.Y - (float)Math.Cos(player.rotation) * (float)player.distanceToCenter;
                 players.Add(player);
+            }
+            else
+            {
+                for (int i = 0; i < numberOfPlayers; i++)
+                {
+                    Player player = new Player(LoadTexture(this.Content, "player"), projectileTexture, TimeSpan.FromSeconds(0.1), new Vector2(0, 0),
+                     new Vector2(windowWidth / 2, windowHeight / 2),
+                     175, (PlayerIndex)i, 100, false);
+                    switch (i)
+                    {
+                        case 0:
+                            player.color = Color.Green;
+                            player.rotation = 0;
+
+                            player.X = player.gravityCenter.X + (float)Math.Sin(player.rotation) * (float)player.distanceToCenter;
+                            player.Y = player.gravityCenter.Y - (float)Math.Cos(player.rotation) * (float)player.distanceToCenter;
+                            break;
+                        case 1:
+                            player.color = Color.Yellow;
+                            player.rotation = (float)Math.PI / 2;
+
+                            player.X = player.gravityCenter.X + (float)Math.Sin(player.rotation) * (float)player.distanceToCenter;
+                            player.Y = player.gravityCenter.Y - (float)Math.Cos(player.rotation) * (float)player.distanceToCenter;
+                            break;
+                        case 2:
+                            player.color = Color.Red;
+                            player.rotation = (float)Math.PI;
+
+                            player.X = player.gravityCenter.X + (float)Math.Sin(player.rotation) * (float)player.distanceToCenter;
+                            player.Y = player.gravityCenter.Y - (float)Math.Cos(player.rotation) * (float)player.distanceToCenter;
+                            break;
+                        case 3:
+                            player.color = Color.Blue;
+                            player.rotation = -(float)Math.PI / 2;
+
+                            player.X = player.gravityCenter.X + (float)Math.Sin(player.rotation) * (float)player.distanceToCenter;
+                            player.Y = player.gravityCenter.Y - (float)Math.Cos(player.rotation) * (float)player.distanceToCenter;
+                            break;
+                    }
+                    players.Add(player);
+                }
             }
         }
         public void AddTurtle(GameTime gameTime)
@@ -223,34 +263,41 @@ namespace RescueMoonTurtle
 
             if (turtles.Count < maxTurtles)
             {
-                if (gameTime.TotalGameTime - previousSpawnTime > spawnTime)
+                if (elapsedSpawnTime > spawnTime)
                 {
                     Random random = new Random();
                     Vector2 turtleSpawnPos;
+                    
+                    int turtleScale=1;
+                    if (elapsedBigTurtleSpawnTime > bigTurtleSpawnTime)
+                    {
+                        turtleScale = 2;
+                        elapsedBigTurtleSpawnTime = TimeSpan.FromSeconds(0);
+                    }
                     switch (random.Next(1, 5))
                     {
                         case 1:
-                            turtleSpawnPos = new Vector2(0 - turtleTexture.Width, random.Next(windowHeight));
+                            turtleSpawnPos = new Vector2(0 - turtleTexture.Width * turtleScale, random.Next(windowHeight));
                             break;
                         case 2:
-                            turtleSpawnPos = new Vector2(windowWidth + turtleTexture.Width, random.Next(windowHeight));
+                            turtleSpawnPos = new Vector2(windowWidth + turtleTexture.Width * turtleScale, random.Next(windowHeight));
                             break;
                         case 3:
-                            turtleSpawnPos = new Vector2(random.Next(windowWidth), 0 - turtleTexture.Height);
+                            turtleSpawnPos = new Vector2(random.Next(windowWidth), 0 - turtleTexture.Height * turtleScale);
                             break;
                         case 4:
-                            turtleSpawnPos = new Vector2(random.Next(windowWidth), windowHeight + turtleTexture.Height);
+                            turtleSpawnPos = new Vector2(random.Next(windowWidth), windowHeight + turtleTexture.Height * turtleScale);
                             break;
                         default:
 
-                            turtleSpawnPos = new Vector2(0 - turtleTexture.Width, random.Next(windowHeight));
+                            turtleSpawnPos = new Vector2(0 - turtleTexture.Width * turtleScale, random.Next(windowHeight));
                             break;
                     }
 
-                    Turtle turtle = new Turtle(turtleTexture, turtleSpawnPos, moon.Position, 0.001f, 5, 5, 10);
+                    Turtle turtle = new Turtle(turtleTexture, turtleSpawnPos, moon.Position, turtleScale, 0.001f, 5, 5, 10);
 
                     turtles.Add(turtle);
-                    previousSpawnTime = gameTime.TotalGameTime;
+                    elapsedSpawnTime = TimeSpan.FromSeconds(0);
                 }
             }
         }
@@ -261,17 +308,17 @@ namespace RescueMoonTurtle
 
             for (int i = 0; i < turtles.Count; i++)
             {
-                if (turtles[i].hitBox.Intersects(moon.hitBox))
-                {
+               
                     if (Collision.CollidesWith(turtles[i], moon))
                     {
+                        moon.hp -= (int)(5*turtles[i].scale);
                         AddExplosion(turtles[i].Position, 1f);
                         turtles[i].active = false;
                         turtles.RemoveAt(i);
-                        moon.hp -= 5;
+                        
 
                     }
-                }
+                
             }
 
         }
@@ -280,14 +327,13 @@ namespace RescueMoonTurtle
             for (int i = 0; i < projectiles.Count; i++)
             {
 
-                if (moon.hitBox.Intersects(projectiles[i].hitBox))
-                {
+               
                     if (Collision.CollidesWith(moon, projectiles[i]))
                     {
 
                         projectiles[i].active = false;
                     }
-                }
+                
 
             }
         }
@@ -297,25 +343,39 @@ namespace RescueMoonTurtle
             {
                 for (int j = 0; j < turtles.Count; j++)
                 {
-                    if (turtles[j].hitBox.Intersects(projectiles[i].hitBox))
-                    {
+                    
                         if (Collision.CollidesWith(turtles[j], projectiles[i]))
                         {
-                            turtles[j].velocity += projectiles[i].velocity / 5;
+                            turtles[j].velocity += projectiles[i].velocity / (5 * turtles[j].scale * turtles[j].scale);
                             AddExplosion(projectiles[i].Position, 0.3f);
                             projectiles[i].active = false;
                         }
-                    }
+                    
                 }
             }
         }
 
         public void UpdateStartMenu(GameTime gameTime)
         {
-            int currentSelected = MenuSelect(gameTime, PlayerIndex.One, startMenuButtons);
-            startMenuButtons[currentSelected].selected = true;
+            int currentSelected=1;
+            if (!noControllers)
+            {
+                currentSelected = MenuSelect(gameTime, PlayerIndex.One, startMenuButtons);
+                startMenuButtons[currentSelected].selected = true;
+            }
             foreach (Button button in startMenuButtons)
             {
+                if (noControllers)
+                {
+                    if (button.hitBox.Contains(mouseState.Position))
+                    {
+                        button.selected = true;
+                    }
+                    else
+                    {
+                        button.selected = false;
+                    }
+                }
                 button.Update(gameTime);
                 if (button.CheckForClick())
                 {
@@ -332,18 +392,21 @@ namespace RescueMoonTurtle
                     }
                 }
             }
-            startMenuButtons[currentSelected].selected = false;
+            if (!noControllers)
+            {
+                startMenuButtons[currentSelected].selected = false;
+            }
 
         }
         int currentMenuItem = 0;
-        int elapsedTime = 0;
-        int menuTime = 100;
+        TimeSpan elapsedMenuTime = TimeSpan.FromSeconds(0);
+        TimeSpan menuTime = TimeSpan.FromSeconds(0.1);
         public int MenuSelect(GameTime gameTime, PlayerIndex num, List<Button> menuButtons)
         {
             if (0 <= currentMenuItem && currentMenuItem < menuButtons.Count)
             {
-                elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
-                if (elapsedTime > menuTime)
+                elapsedMenuTime += TimeSpan.FromSeconds(gameTime.ElapsedGameTime.TotalSeconds);
+                if (elapsedMenuTime > menuTime)
                 {
                     if ((GamePad.GetState(num).ThumbSticks.Left.Y) >= 0.25)
                     {
@@ -355,7 +418,7 @@ namespace RescueMoonTurtle
                         currentMenuItem += 1;
 
                     }
-                    elapsedTime = 0;
+                    elapsedMenuTime =TimeSpan.FromSeconds( 0);
                 }
 
             }
@@ -446,6 +509,8 @@ namespace RescueMoonTurtle
 
                 gameTimeScore += TimeSpan.FromSeconds(gameTime.ElapsedGameTime.TotalSeconds);
                 elapsedDifficulityIncreaseTime += TimeSpan.FromSeconds(gameTime.ElapsedGameTime.TotalSeconds);
+                elapsedSpawnTime  += TimeSpan.FromSeconds(gameTime.ElapsedGameTime.TotalSeconds);
+                elapsedBigTurtleSpawnTime  += TimeSpan.FromSeconds(gameTime.ElapsedGameTime.TotalSeconds);
                 if (elapsedDifficulityIncreaseTime > difficulityIncreaseTime)
                 {
                     if (spawnTime > TimeSpan.FromSeconds(0.05) - TimeSpan.FromSeconds(0.1))
@@ -488,15 +553,12 @@ namespace RescueMoonTurtle
                 }
             }
         }
-        TimeSpan endGameDelay;
-        TimeSpan elapsedEndGameTime;
-        TimeSpan difficulityIncreaseTime;
-        TimeSpan elapsedDifficulityIncreaseTime;
+     
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            mouseState = Mouse.GetState();
             if (currentState == GameStates.StartMenu)
             {
                 UpdateStartMenu(gameTime);
@@ -534,6 +596,7 @@ namespace RescueMoonTurtle
                                   0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
                 }
             }
+            
 
         }
 
@@ -609,6 +672,11 @@ namespace RescueMoonTurtle
             if (currentState == GameStates.GamePlaying)
             {
                 DrawGame(spriteBatch);
+            }
+            if (noControllers)
+            {
+                spriteBatch.Draw(cursor, mouseState.Position.ToVector2(), null, Color.White, 0f,
+                  new Vector2(cursor.Width/2,cursor.Height/2), 2,SpriteEffects.None, 0f);
             }
             spriteBatch.End();
             base.Draw(gameTime);

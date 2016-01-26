@@ -17,10 +17,10 @@ namespace RescueMoonTurtle
         public int mass;
         public int speed;
         public Vector2 gravityCenter;
-        public Turtle(Texture2D texture, Vector2 position, Vector2 center, float gravity, int speed, int mass, int hp)
+        public Turtle(Texture2D texture, Vector2 position, Vector2 center,float scale, float gravity, int speed, int mass, int hp)
             : base(texture, 1, 1, position, 0f, Color.White)
         {
-            
+            this.scale = scale;
             this.gravityCenter = center;
             this.speed = speed;
             this.mass = mass;
@@ -30,8 +30,8 @@ namespace RescueMoonTurtle
         }
         public void CheckInsideWindow()
         {
-            if (Position.X > Game1.windowWidth+100 || X < 0 -100||
-                Position.Y > Game1.windowHeight + 100 || Y < 0-100)
+            if (Position.X > Game1.windowWidth + 1+frameWidth * scale || X < 0 - 1-frameWidth * scale ||
+                Position.Y > Game1.windowHeight + 1+frameHeight * scale || Y < 0 -1- frameHeight * scale)
             {
                 active = false;
             }

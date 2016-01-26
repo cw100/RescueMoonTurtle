@@ -9,7 +9,8 @@ using Microsoft.Xna.Framework.Storage;
 namespace RescueMoonTurtle
 {
    public class Button:Animation
-    {
+   {
+       MouseState mouseState;
         public bool selected = false;
         public string buttonName;
         public bool pressed = false;
@@ -23,7 +24,7 @@ namespace RescueMoonTurtle
         public bool CheckForClick()
         {
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed || mouseState.LeftButton==ButtonState.Pressed)
             {
                 if (selected)
                 {
@@ -38,7 +39,7 @@ namespace RescueMoonTurtle
 
         public override void Update(GameTime gameTime)
         {
-        
+         mouseState = Mouse.GetState();
             if (selected == true)
             {
                 scale = 1.2f;

@@ -11,6 +11,7 @@ namespace RescueMoonTurtle
     public class Animation
     {
         public Rectangle hitBox;
+        public Rectangle bigHitBox;
         public bool reversed =false;
         public float scale = 1f;
         public bool active = true;
@@ -69,7 +70,7 @@ namespace RescueMoonTurtle
             angle = startangle;
             color = startcolor;
 
-            hitBox = new Rectangle((int)X - frameWidth / 2, (int)Y - frameHeight / 2, frameWidth, frameHeight);
+            hitBox = new Rectangle((int)X - (int)(frameWidth * scale / 2), (int)Y - (int)(frameHeight * scale / 2), (int)(frameWidth * scale), (int)(frameHeight * scale));
         }
       
   
@@ -142,8 +143,8 @@ namespace RescueMoonTurtle
              Matrix.CreateScale(scale) *
              Matrix.CreateRotationZ(angle) *
              Matrix.CreateTranslation(new Vector3(position, 0.0f));
-                
-            
+
+                hitBox = new Rectangle((int)X - (int)(frameWidth * scale / 2), (int)Y - (int)(frameHeight * scale/ 2), (int)(frameWidth * scale), (int)(frameHeight * scale));
             }
             else
             {
