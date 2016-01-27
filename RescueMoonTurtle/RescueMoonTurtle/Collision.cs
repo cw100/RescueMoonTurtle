@@ -35,14 +35,12 @@ namespace RescueMoonTurtle
             //Checks hitbox collision of animations
             if (objectBRectangle.Intersects(objectARectangle))
             {
-                //Gets current animation frames color data array
-                objectA.collisionData();
-                objectB.collisionData();
+               
                 //Checks if any animation pixels overlap, based on alpha values
                 if (IntersectPixels(objectA.transformation, objectA.frameWidth,
-                                    objectA.frameHeight, objectA.colorData,
+                                    objectA.frameHeight, objectA.ColorData,
                                     objectB.transformation, objectB.frameWidth,
-                                    objectB.frameHeight, objectB.colorData))
+                                    objectB.frameHeight, objectB.ColorData))
                 {
                     return true;
                 }

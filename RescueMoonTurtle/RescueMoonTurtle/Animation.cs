@@ -47,17 +47,24 @@ namespace RescueMoonTurtle
         public Color color;
         public bool isPaused = false;
         public float offset = 1;
-        public Color[] colorData;
+        private Color[] colorData;
+        //ENCAPSULATION of colorData array
+        public Color[] ColorData
+        {
+            get
+            {
+                //Creates empty Color array based on texture area
+                colorData = new Color[frameWidth * frameHeight];
+                //Gets Color data of current frame
+                spriteSheet.GetData<Color>(0, source, colorData, 0, frameWidth * frameHeight);
+                return colorData; 
+            }
+
+        }
         public bool runOnce = false;
         public Matrix transformation;
 
-        public void collisionData()
-        {
-            //Creates empty Color array based on texture area
-            colorData = new Color[frameWidth * frameHeight];
-            //Gets Color data of current frame
-            spriteSheet.GetData<Color>(0, source, colorData, 0, frameWidth * frameHeight);
-        }
+        
 
         //Constructor creates animation with angle and color (EXAMPLE OF POLYMOPHISM)
         public Animation(Texture2D spriteSheet, int totalFrames, float animationLength, Vector2 position, float angle, Color color)
