@@ -5,16 +5,40 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RescueMoonTurtle", "RescueMoonTurtle\RescueMoonTurtle.csproj", "{208803A8-F73C-4562-B73E-B77305692D59}"
 EndProject
+Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Setup", "Setup\Setup.isproj", "{8147A60A-949E-443D-B50B-13740D443FE5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{208803A8-F73C-4562-B73E-B77305692D59} = {208803A8-F73C-4562-B73E-B77305692D59}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CD_ROM|x86 = CD_ROM|x86
 		Debug|x86 = Debug|x86
+		DVD-5|x86 = DVD-5|x86
 		Release|x86 = Release|x86
+		SingleImage|x86 = SingleImage|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{208803A8-F73C-4562-B73E-B77305692D59}.CD_ROM|x86.ActiveCfg = Release|x86
+		{208803A8-F73C-4562-B73E-B77305692D59}.CD_ROM|x86.Build.0 = Release|x86
 		{208803A8-F73C-4562-B73E-B77305692D59}.Debug|x86.ActiveCfg = Debug|x86
 		{208803A8-F73C-4562-B73E-B77305692D59}.Debug|x86.Build.0 = Debug|x86
+		{208803A8-F73C-4562-B73E-B77305692D59}.DVD-5|x86.ActiveCfg = Debug|x86
+		{208803A8-F73C-4562-B73E-B77305692D59}.DVD-5|x86.Build.0 = Debug|x86
 		{208803A8-F73C-4562-B73E-B77305692D59}.Release|x86.ActiveCfg = Release|x86
 		{208803A8-F73C-4562-B73E-B77305692D59}.Release|x86.Build.0 = Release|x86
+		{208803A8-F73C-4562-B73E-B77305692D59}.SingleImage|x86.ActiveCfg = Release|x86
+		{208803A8-F73C-4562-B73E-B77305692D59}.SingleImage|x86.Build.0 = Release|x86
+		{8147A60A-949E-443D-B50B-13740D443FE5}.CD_ROM|x86.ActiveCfg = CD_ROM
+		{8147A60A-949E-443D-B50B-13740D443FE5}.CD_ROM|x86.Build.0 = CD_ROM
+		{8147A60A-949E-443D-B50B-13740D443FE5}.Debug|x86.ActiveCfg = SingleImage
+		{8147A60A-949E-443D-B50B-13740D443FE5}.Debug|x86.Build.0 = SingleImage
+		{8147A60A-949E-443D-B50B-13740D443FE5}.DVD-5|x86.ActiveCfg = DVD-5
+		{8147A60A-949E-443D-B50B-13740D443FE5}.DVD-5|x86.Build.0 = DVD-5
+		{8147A60A-949E-443D-B50B-13740D443FE5}.Release|x86.ActiveCfg = SingleImage
+		{8147A60A-949E-443D-B50B-13740D443FE5}.Release|x86.Build.0 = SingleImage
+		{8147A60A-949E-443D-B50B-13740D443FE5}.SingleImage|x86.ActiveCfg = SingleImage
+		{8147A60A-949E-443D-B50B-13740D443FE5}.SingleImage|x86.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

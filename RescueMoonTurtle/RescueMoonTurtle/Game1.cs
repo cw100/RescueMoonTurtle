@@ -19,7 +19,7 @@ namespace RescueMoonTurtle
         bool noControllers;
         MouseState mouseState;
         string timeString;
-        string path = @"Score.txt";
+        string path;
         List<float> scores;
         SpriteFont timerFont;
         TimeSpan gameTimeScore;
@@ -127,9 +127,16 @@ namespace RescueMoonTurtle
 
         protected override void Initialize()
         {
-            //Creates list for scores
+            //Creates list for scores   
             scores = new List<float>();
-            //Creates new blank text file for scores if one doesn't exist
+            //Create Appdata path
+            path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\MoonTurtleRescue";
+            //Creates new blank text file for scores if one doesn't exist;
+            bool exists = System.IO.Directory.Exists(path);
+
+            if (!exists)
+                System.IO.Directory.CreateDirectory(path);
+            path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MoonTurtleRescue\\Scores.txt";
             if (!File.Exists(path))
             {
                 using (StreamWriter sw = File.CreateText(path))
